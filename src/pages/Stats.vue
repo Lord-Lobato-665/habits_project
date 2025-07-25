@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-orange-50 to-pink-100 font-sans flex flex-col">
+    <ProfileMenu />
     <!-- Header -->
     <Menubar :model="items" class="bg-white shadow-md px-4">
       <template #start>
@@ -8,13 +9,19 @@
     </Menubar>
 
     <!-- Contenido -->
-    <main class="flex-grow p-6 space-y-6 max-w-7xl mx-auto">
-      <h2 class="text-3xl font-bold text-orange-600">Estadísticas en tiempo real</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatChart table="temperature_recording" label="Temperatura (°C)" color="#f97316" />
-        <StatChart table="heart_rate_recording" label="Ritmo cardiaco (bpm)" color="#0ea5e9" />
-      </div>
-    </main>
+    <div class="scaled-content">
+      <main class="p-6 space-y-6 max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-orange-600">Estadísticas en tiempo real</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="enlarged-chart">
+            <StatChart table="temperature_recording" label="Temperatura (°C)" color="#f97316" />
+          </div>
+          <div class="enlarged-chart">
+            <StatChart table="heart_rate_recording" label="Ritmo cardiaco (bpm)" color="#0ea5e9" />
+          </div>
+        </div>
+      </main>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-white shadow-inner py-6 text-center text-sm text-gray-500 flex flex-col md:flex-row justify-center items-center gap-4">
@@ -38,6 +45,7 @@
 import { ref } from 'vue'
 import Menubar from 'primevue/menubar'
 import StatChart from '../components/StatsChart.vue'
+import ProfileMenu from "../components/ProfileMenu.vue";
 
 const items = ref([
   { label: 'Inicio', icon: 'pi pi-home', command: () => window.location.href = '/' },
@@ -45,3 +53,15 @@ const items = ref([
   { label: 'Estadísticas', icon: 'pi pi-chart-bar', command: () => window.location.href = '/stats' }
 ])
 </script>
+
+<style scoped>
+.scaled-content {
+  transform: scale(0.8);
+  transform-origin: top center;
+}
+
+.enlarged-chart {
+  transform: scale(1);
+  transform-origin: center;
+}
+</style>

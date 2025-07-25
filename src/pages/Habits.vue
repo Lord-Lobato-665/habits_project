@@ -1,9 +1,13 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-orange-50 to-pink-100 font-sans flex flex-col">
+    <ProfileMenu />
     <!-- Header con Menubar y navegación -->
     <Menubar :model="items" class="bg-white shadow-md px-4">
       <template #start>
-        <div class="text-orange-600 font-bold text-xl tracking-wide cursor-pointer" @click="goHome">
+        <div
+          class="text-orange-600 font-bold text-xl tracking-wide cursor-pointer"
+          @click="goHome"
+        >
           FeelingPartner
         </div>
       </template>
@@ -11,13 +15,22 @@
 
     <!-- Contenido principal -->
     <div class="flex-grow p-4 md:p-8">
-      <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4 md:gap-0">
+      <div
+        class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4 md:gap-0"
+      >
         <h1 class="text-3xl font-extrabold text-orange-600">Hábitos</h1>
         <div class="flex items-center space-x-3">
-          <label for="viewToggle" class="text-gray-700 font-semibold select-none">Modo Calendario</label>
+          <label for="viewToggle" class="text-gray-700 font-semibold select-none"
+            >Modo Calendario</label
+          >
           <ToggleButton id="viewToggle" v-model="calendarView" />
         </div>
-        <Button label="Nuevo hábito" icon="pi pi-plus" class="p-button-primary ml-0 md:ml-4" @click="openNewHabit" />
+        <Button
+          label="Nuevo hábito"
+          icon="pi pi-plus"
+          class="p-button-primary ml-0 md:ml-4"
+          @click="openNewHabit"
+        />
       </div>
 
       <template v-if="!calendarView">
@@ -45,8 +58,12 @@
         </div>
 
         <div class="overflow-x-auto bg-white rounded-lg shadow-lg p-4">
-          <table class="w-full text-sm text-left text-gray-700 calendar-table">
-            <thead class="bg-orange-100 text-orange-700 font-semibold uppercase tracking-wide text-xs">
+          <table
+            class="w-full text-sm text-left text-gray-700 calendar-table"
+          >
+            <thead
+              class="bg-orange-100 text-orange-700 font-semibold uppercase tracking-wide text-xs"
+            >
               <tr>
                 <th class="px-4 py-3 rounded-tl-lg">Fecha</th>
                 <th class="px-4 py-3">Título</th>
@@ -60,7 +77,9 @@
                 class="border-b border-orange-200 hover:bg-orange-50 cursor-pointer transition-colors"
                 @click="editHabit(habit)"
               >
-                <td class="px-4 py-3 whitespace-nowrap font-mono text-xs text-orange-600">
+                <td
+                  class="px-4 py-3 whitespace-nowrap font-mono text-xs text-orange-600"
+                >
                   {{ formatDate(habit.notification) }}
                 </td>
                 <td class="px-4 py-3 truncate max-w-xs font-semibold text-orange-700">
@@ -104,25 +123,49 @@
         :style="{ width: '400px' }"
         @hide="deleteConfirmVisible = false"
       >
-        <p>¿Seguro que quieres eliminar el hábito <strong>{{ habitToDelete?.title_habit }}</strong>?</p>
+        <p>
+          ¿Seguro que quieres eliminar el hábito
+          <strong>{{ habitToDelete?.title_habit }}</strong>?
+        </p>
         <div class="flex justify-end gap-3 mt-6">
-          <Button label="Cancelar" class="p-button-text" @click="deleteConfirmVisible = false" />
+          <Button
+            label="Cancelar"
+            class="p-button-text"
+            @click="deleteConfirmVisible = false"
+          />
           <Button label="Eliminar" class="p-button-danger" @click="deleteHabit" />
         </div>
       </Dialog>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-white shadow-inner py-6 text-center text-sm text-gray-500 flex flex-col md:flex-row justify-center items-center gap-4">
+    <footer
+      class="bg-white shadow-inner py-6 text-center text-sm text-gray-500 flex flex-col md:flex-row justify-center items-center gap-4"
+    >
       <span>Hecho con ❤️ por FeelingPartner. Monitoreando lo invisible.</span>
       <div class="flex space-x-6 text-orange-400">
-        <a href="https://twitter.com/feelingpartner" target="_blank" aria-label="Twitter" class="hover:text-orange-600 transition">
+        <a
+          href="https://twitter.com/feelingpartner"
+          target="_blank"
+          aria-label="Twitter"
+          class="hover:text-orange-600 transition"
+        >
           <i class="pi pi-twitter text-xl"></i>
         </a>
-        <a href="https://facebook.com/feelingpartner" target="_blank" aria-label="Facebook" class="hover:text-orange-600 transition">
+        <a
+          href="https://facebook.com/feelingpartner"
+          target="_blank"
+          aria-label="Facebook"
+          class="hover:text-orange-600 transition"
+        >
           <i class="pi pi-facebook text-xl"></i>
         </a>
-        <a href="https://instagram.com/feelingpartner" target="_blank" aria-label="Instagram" class="hover:text-orange-600 transition">
+        <a
+          href="https://instagram.com/feelingpartner"
+          target="_blank"
+          aria-label="Instagram"
+          class="hover:text-orange-600 transition"
+        >
           <i class="pi pi-instagram text-xl"></i>
         </a>
       </div>
@@ -131,7 +174,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '../supabase/client'
 import HabitCard from '../components/HabitCard.vue'
@@ -142,6 +185,7 @@ import ToggleButton from 'primevue/togglebutton'
 import Menubar from 'primevue/menubar'
 import Dialog from 'primevue/dialog'
 import { format, isSameDay } from 'date-fns'
+import ProfileMenu from "../components/ProfileMenu.vue";
 
 const router = useRouter()
 
@@ -162,16 +206,31 @@ const items = [
   { label: 'Estadísticas', icon: 'pi pi-chart-bar', command: () => router.push('/stats') }
 ]
 
+const user = ref(null)
+
+onMounted(async () => {
+  const { data } = await supabase.auth.getUser()
+  if (!data?.user) {
+    router.push('/login')
+    return
+  }
+  user.value = data.user
+  await fetchHabits()
+})
+
 async function fetchHabits() {
-  const { data, error } = await supabase.from('habitos').select('*').order('notification', { ascending: true })
+  const { data, error } = await supabase
+    .from('habitos')
+    .select('*')
+    .eq('user_id', user.value.id)
+    .order('notification', { ascending: true })
+
   if (error) {
     console.error('Error cargando hábitos:', error.message)
   } else {
     habits.value = data
   }
 }
-
-fetchHabits()
 
 function openNewHabit() {
   selectedHabit.value = null
@@ -185,21 +244,26 @@ function editHabit(habit) {
   modalVisible.value = true
 }
 
-function saveHabit(habitData) {
+async function saveHabit(habitData) {
   if (isEditing.value) {
-    updateHabit(habitData)
+    await updateHabit(habitData)
   } else {
-    createHabit(habitData)
+    await createHabit(habitData)
   }
+  await fetchHabits()
+  modalVisible.value = false
 }
 
 // Crear hábito
 async function createHabit(habitData) {
+  if (!user.value) {
+    alert('Usuario no autenticado')
+    return
+  }
+  habitData.user_id = user.value.id
   const { data, error } = await supabase.from('habitos').insert([habitData])
   if (error) {
     console.error('Error creando hábito:', error.message)
-  } else {
-    habits.value.push(data[0])
   }
 }
 
@@ -211,11 +275,6 @@ async function updateHabit(habitData) {
     .eq('id', selectedHabit.value.id)
   if (error) {
     console.error('Error actualizando hábito:', error.message)
-  } else {
-    const index = habits.value.findIndex(h => h.id === selectedHabit.value.id)
-    if (index !== -1) {
-      habits.value[index] = { ...habits.value[index], ...habitData }
-    }
   }
 }
 
